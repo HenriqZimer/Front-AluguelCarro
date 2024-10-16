@@ -3,9 +3,7 @@
     <v-row justify="center">
       <v-col cols="12" md="6">
         <v-card outlined>
-          <v-card-title class="text-h5">{{
-            isEditing ? "Editar Aluguel" : "Novo Aluguel"
-          }}</v-card-title>
+          <v-card-title class="text-h5">{{ isEditing ? "Editar Aluguel" : "Novo Aluguel" }}</v-card-title>
 
           <v-card-text>
             <v-form ref="form" v-model="valid" lazy-validation>
@@ -33,11 +31,7 @@
                 label="Valor Total"
                 type="number"
                 required
-                :rules="[
-                  (v) =>
-                    v > 0 ||
-                    'Valor Total é obrigatório e deve ser maior que zero',
-                ]"
+                :rules="[(v) => v > 0 || 'Valor Total é obrigatório e deve ser maior que zero']"
               ></v-text-field>
 
               <!-- Status -->
@@ -52,9 +46,7 @@
           </v-card-text>
 
           <v-card-actions>
-            <v-btn color="primary" :disabled="!valid" @click="handleSubmit">{{
-              isEditing ? "Atualizar" : "Salvar"
-            }}</v-btn>
+            <v-btn color="primary" :disabled="!valid" @click="handleSubmit">{{ isEditing ? "Atualizar" : "Salvar" }}</v-btn>
             <v-btn color="secondary" @click="handleCancel">Cancelar</v-btn>
           </v-card-actions>
         </v-card>
@@ -75,10 +67,10 @@ export default {
         dataFim: "",
         valorTotal: 0,
         status: "em andamento",
-        idUsuario: "id_do_usuario_aqui", // Adicione o ID do usuário
+        idUsuario: "id_do_usuario_aqui", // ID do usuário será configurado aqui
       },
-      valid: false,
-      isEditing: false,
+      valid: false, // Validação do formulário
+      isEditing: false, // Define se é um formulário de edição ou criação
     };
   },
   created() {
@@ -90,9 +82,7 @@ export default {
   methods: {
     async fetchAluguel() {
       try {
-        const response = await axios.get(
-          `http://localhost:3000/alugueis/${this.id}`
-        );
+        const response = await axios.get(`http://localhost:3000/alugueis/${this.id}`);
         this.aluguel = response.data;
       } catch (error) {
         console.error("Erro ao buscar aluguel:", error);
@@ -100,16 +90,14 @@ export default {
     },
     async handleSubmit() {
       const form = this.$refs.form;
+
       if (form.validate()) {
         try {
           // Adicione o ID do usuário ao objeto aluguel antes de enviar
           this.aluguel.idUsuario = "id_do_usuario_aqui"; // Atualize com o ID real
 
           if (this.isEditing) {
-            await axios.put(
-              `http://localhost:3000/alugueis/${this.id}`,
-              this.aluguel
-            );
+            await axios.put(`http://localhost:3000/alugueis/${this.id}`, this.aluguel);
             console.log("Aluguel atualizado com sucesso!");
           } else {
             await axios.post("http://localhost:3000/alugueis", this.aluguel);
@@ -129,3 +117,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.v-card {
+  margin-top: 20px;
+}
+.v-btn {
+  margin-right: 10px;
+}
+</style>
